@@ -23,13 +23,13 @@
   --spanish-gray: hsl(0, 0%, 60%);
   --sonic-silver: hsl(0, 0%, 47%);
   --eerie-black: hsl(0, 0%, 13%);
-  --salmon-pink: hsl(274, 44%, 59%);
+  --salmon-pink: #6f439b;
   --sandy-brown: hsl(29, 90%, 65%);
-  --bittersweet: hsl(0, 100%, 70%);
+  --bittersweet: hsl(277, 43%, 53%);
   --ocean-green: hsl(152, 51%, 52%);
   --davys-gray: hsl(0, 0%, 33%);
   --cultured: hsl(0, 0%, 93%);
-  --white: hsl(0, 0%, 100%);
+  --white: hsl(0, 100%, 100%);
   --onyx: hsl(0, 0%, 27%);
 
   /**
@@ -135,7 +135,7 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-  background: hsl(0, 2%, 13%);
+  background: hsl(0, 0%, 80%);
   border: 3px solid var(--white);
   -webkit-border-radius: 10px;
           border-radius: 10px;

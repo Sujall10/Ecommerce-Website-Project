@@ -4,52 +4,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Apni Dukaan - Login & User Profile</title>
     <link rel="stylesheet" href="Login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+
+        .input-area {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-area input {
+            width: calc(100% - 40px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        /* .input-area .icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #999;
+        } */
+
+        .error {
+            color: #dc3545;
+            display: none;
+        }
+
+        .error-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #dc3545;
+            display: none;
+        }
+
+        .pass-txt {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .pass-txt a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .sign-txt {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .sign-txt a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+            #profileBox {
+                padding: 20px;
+            }
+
+            .header-user-actions h1 {
+                font-size: 20px;
+            }
+
+            .login-form-container {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <div class="header-main">
         <div class="container">
-            <div class="header-user-actions">
-                <a href="index.html"><h1>Apni Dukaan</a>
+            <div>
+                <a href="index.html"><img src="assets\images\[removal.ai]_51b24696-c61f-46ff-98a9-94df92b50bed-1-1.png" height="100px" width="100px" alt="logo"></a>
             </div>
-            <br>
+            <!-- <div class="header-user-actions">
+                    <h1>Ace Cart</h1>
+            </div> -->
         </div>
-        <div class="wrapper">
+    </div>
+
+    <div class="wrapper">
+        <div class="login-form-container" id="loginForm">
             <header>Login</header>
-            <form action="submit">
-                <div class="field email">
-                    <div class="input-area">
-                        <input type="text" id="email" placeholder="Email Address">
-                        <i class="icon fas fa-envelope"></i>
-                        <i class="error error-icon fas fa-exclamation-circle"></i>
-                    </div>
-                    <div class="error error-txt">Email can't be blank</div>
+            <form id="loginFormElement">
+                <div class="input-area">
+                    <i class="icon fas fa-envelope"></i>
+                    <i class="error error-icon fas fa-exclamation-circle"></i>
+                    <input type="text" id="email" placeholder="Email Address" required>
+                   
                 </div>
-                <div class="field password">
-                    <div class="input-area">
-                        <input type="password" id="password" placeholder="Password">
-                        <i class="icon fas fa-lock"></i>
-                        <i class="error error-icon fas fa-exclamation-circle"></i>
-                    </div>
-                    <div class="error error-txt">Password can't be blank</div>
+                <div class="error">Email can't be blank</div>
+                <div class="input-area">
+                    <i class="icon fas fa-lock"></i>
+                    <i class="error error-icon fas fa-exclamation-circle"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                    
                 </div>
+                <div class="error">Password can't be blank</div>
                 <div class="pass-txt"><a href="#">Forgot password?</a></div>
-                <input type="submit" id="Login" value="Login">
+                <input type="submit" id="loginButton" value="Login">
             </form>
-            <div class="sign-txt">Not yet member? <a href="Signup.html">Signup now</a></div>
+            <div class="sign-txt">Not a member yet? <a href="Signup.html">Sign up now</a></div>
+        </div>
+
+        <div id="profileDisplay" style="display: none;">
+            <div style="text-align: center;">
+                <h2>User Profile</h2>
+            </div>
+            <div id="profileBox">
+                <img src="default-profile.png" alt="Profile Picture" id="profilePicture">
+                <h2>User Name: <span id="userName"></span></h2>
+                <p>Email: <span id="userEmail"></span></p>
+                <p>Birthday: <span id="userBirthday"></span></p>
+                <br>
+                <button id="logoutButton">Logout</button>
+            </div>
         </div>
     </div>
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDoWuFm-ZC0uM1Wu-hQNSGD2WWM94IugkY",
             authDomain: "login-with-authenticatio-fd6ac.firebaseapp.com",
@@ -61,28 +148,47 @@
             measurementId: "G-2LDTK3R16Q"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
         const auth = getAuth(app);
 
-        document.getElementById('Login').addEventListener('click', (e) => {
-            e.preventDefault();
+        const loginForm = document.getElementById('loginFormElement');
+        const profileDisplay = document.getElementById('profileDisplay');
 
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
+        // Function to display user profile information
+        function displayUserInfo(user) {
+            const userId = user.uid;
+            const userRef = ref(database, 'users/' + userId);
+
+            get(userRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    document.getElementById('profilePicture').src = userData.profilePicture || 'default-profile.png';
+                    document.getElementById('userName').innerText = `${userData.firstName} ${userData.lastName}`;
+                    document.getElementById('userEmail').innerText = userData.email;
+                    document.getElementById('userBirthday').innerText = `${userData.birthdayDay}/${userData.birthdayMonth}/${userData.birthdayYear}`;
+
+                    // Show profile display, hide login form
+                    document.getElementById('loginForm').style.display = 'none';
+                    profileDisplay.style.display = 'block';
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
+        }
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Signed in 
                     const user = userCredential.user;
-                    const dt = new Date();
-                    update(ref(database, 'users/' + user.uid), {
-                        last_login: dt,
-                    });
-
-                    alert('User logged in');
-                    window.location.href = "index.html";
+                    displayUserInfo(user);
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -90,7 +196,31 @@
                     alert(errorMessage);
                 });
         });
+
+        // Handle logout
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                // Show login form after logout
+                document.getElementById('loginForm').style.display = 'block';
+                profileDisplay.style.display = 'none';
+            }).catch((error) => {
+                console.error(error);
+            });
+        });
+
+        // Check authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, display profile
+                displayUserInfo(user);
+            } else {
+                // No user is signed in, show login form
+                profileDisplay.style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
+            }
+        });
     </script>
 </body>
 
 </html>
+

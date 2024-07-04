@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>Create account</title>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
-        integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <style>
         #box {
@@ -19,7 +14,6 @@
             border-radius: 5px;
             box-shadow: 10px 10px 10px 13px rgba(0, 0, 0, 0.1);
         }
-
         #SignUp {
             height: 50px;
             margin-top: 30px;
@@ -31,28 +25,20 @@
             border-bottom: 2px solid rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
-
         #SignUp:hover {
             background: black;
         }
     </style>
-
 </head>
-
 <body>
     <div class="header-main">
         <div class="jumbotron jumbotron-fluid">
-            
             <div class="container">
-                
                 <div class="row">
-                    
                     <div class="col-12 col-sm-8 col-md-6 col-lg-4 offset-sm-2 offset-md-3 offset-lg-4">
-                        <!-- <h1 class="mb-3 text-center">Signup</h1> -->
                         <form class="mb-3" id="box" action="submit">
                             <h2 class="mb-3" style="text-align: center;">Signup</h2>
                             <div class="row">
-                                
                                 <div class="form-group col-12 col-sm-6">
                                     <label for="firstName">First name:</label>
                                     <input type="text" class="form-control" placeholder="First name" id="firstName" />
@@ -64,8 +50,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="email">Email:</label>
-                                <input type="email" class="form-control" placeholder="example@example.com" id="email"
-                                    required />
+                                <input type="email" class="form-control" placeholder="example@example.com" id="email" required />
                             </div>
                             <div class="form-group">
                                 <label for="password">Password:</label>
@@ -155,46 +140,36 @@
                                     </select>
                                 </div>
                             </div>
-                            <button type="submit" id="SignUp" class="btn btn-primary btn-block mb-3">
-                                Create account
-                            </button>
+                            
+                            <button type="submit" id="SignUp" class="btn btn-primary btn-block mb-3">Create account</button>
                             <div class="alert alert-info small" role="alert">
                                 By clicking above you agree to our
-                                <a href="#" class="alert-link">Terms &amp; Conditions</a> and
-                                our <a href="#" class="alert-link">Privacy Policy</a>.
+                                <a href="#" class="alert-link">Terms &amp; Conditions</a> and our
+                                <a href="#" class="alert-link">Privacy Policy</a>.
                             </div>
-                            <!-- <div class="text-center">
-                                <p>or ...</p>
-                                <a href="Login.html" class="btn btn-success">Login</a>
-                            </div> -->
                         </form>
+                        <div id="userProfile"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
 
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
             apiKey: "AIzaSyDoWuFm-ZC0uM1Wu-hQNSGD2WWM94IugkY",
             authDomain: "login-with-authenticatio-fd6ac.firebaseapp.com",
             databaseURL: "https://login-with-authenticatio-fd6ac-default-rtdb.firebaseio.com",
             projectId: "login-with-authenticatio-fd6ac",
-            storageBucket: "login-with-authenticatio-fd6ac.appspot.com",
+            storageBucket: "login-with-authenticatio-fd6ac",
             messagingSenderId: "625479017674",
             appId: "1:625479017674:web:f52ab7f9610816ce41c033",
             measurementId: "G-2LDTK3R16Q"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
         const auth = getAuth(app);
@@ -202,49 +177,39 @@
         document.getElementById('SignUp').addEventListener('click', (e) => {
             e.preventDefault();
 
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
-            var firstName = document.getElementById('firstName').value;
-            var lastName = document.getElementById('lastName').value;
-            var birthdayDay = document.getElementById('birthdayDay').value;
-            var birthdayMonth = document.getElementById('birthdayMonth').value;
-            var birthdayYear = document.getElementById('birthdayYear').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const birthdayDay = document.getElementById('birthdayDay').value;
+            const birthdayMonth = document.getElementById('birthdayMonth').value;
+            const birthdayYear = document.getElementById('birthdayYear').value;
 
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Signed up 
-                    const user = userCredential.user;
+            if (email && password && firstName && lastName && birthdayDay && birthdayMonth && birthdayYear) {
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
 
-                    set(ref(database, 'users/' + user.uid), {
-                        firstName: firstName,
-                        email: email,
-                        lastName: lastName,
-                        birthdayDay: birthdayDay,
-                        birthdayMonth: birthdayMonth,
-                        birthdayYear: birthdayYear
+                        set(ref(database, 'users/' + user.uid), {
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email,
+                            birthdayDay: birthdayDay,
+                            birthdayMonth: birthdayMonth,
+                            birthdayYear: birthdayYear
+                        });
+                        window.location.href = "Login.html";
                     })
-
-                    alert('User ID created: ');
-                    window.location.href = "Login.html";
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    alert(errorMessage);
-                });
+                    .catch((error) => {
+                        alert(error.message);
+                    });
+            } else {
+                alert("Please fill in all fields");
+            }
         });
     </script>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
-        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
-        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>

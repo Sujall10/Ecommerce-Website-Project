@@ -7,25 +7,110 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sujal- ECommerce Website</title>
 
-  <!-- favicon -->
+  <!-- Favicon -->
   <link rel="shortcut icon" href="./assets/images/logo/favicon.ico" type="image/x-icon">
 
-  <!-- custom css link -->
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="./assets/css/style-prefix.css">
+  <link rel="stylesheet" href="assets\css\style.css">
+  <style>
+    #chatbox {
+  position: fixed;
+  right: 20px; /* Adjust this value to position it where you want */
+  bottom: 20px; /* Adjust this value to position it where you want */
+  width: 300px; /* Adjust width as needed */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: none; /* Initially hide the chatbox */
+  flex-direction: column;
+  z-index: 1000; /* Ensure it's above other content */
+}
 
-  <!-- google font link -->
+#chat-icon {
+  position: fixed;
+  right: 20px; /* Adjust this value to match chatbox left position */
+  bottom: 20px; /* Adjust this value to match chatbox bottom position */
+  z-index: 1000; /* Ensure it's above other content */
+  cursor: pointer;
+}
+
+#chat-icon img {
+  width: 50px; /* Adjust size as needed */
+}
+
+#chat-header {
+  background-color: #6f439b;
+  color: #fff;
+  padding: 10px;
+  font-weight: bold;
+}
+
+#chat-content {
+  padding: 10px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+#chat-messages {
+  margin-bottom: 10px;
+}
+
+#chat-input {
+  display: flex;
+  align-items: center;
+}
+
+#message-input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 8px;
+  color: #6f439b;
+}
+
+#send-button {
+  padding: 8px 16px;
+  background-color: #6f439b;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+  </style>
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
-  <div id="1"></div>
-  <div id="2"></div>
-  <div id="3"></div>
+  <div id="header"></div>
+  <div id="main"></div>
+  <div id="footer"></div>
 
+  <!-- Chat Icon -->
+  <div id="chat-icon">
+    <img src="assets/images/[removal.ai]_c1d53545-0360-4037-baaa-16903860e6df-jd.png" alt="Chat Icon">
+  </div>
+
+  <!-- Chatbox -->
+  <div id="chatbox">
+    <div id="chat-header">Chat with Us!</div>
+    <div id="chat-content">
+      <div id="chat-messages">
+        <!-- Chat messages will appear here -->
+      </div>
+      <div id="chat-input">
+        <input type="text" id="message-input" placeholder="Type your message here...">
+        <button id="send-button">Send</button>
+      </div>
+    </div>
+  </div>
+  <script src="Search.js"></script>
+  <script src="s1.js"></script>
   <script>
+    // Function to load external content into divs
     function load(url, elementId) {
       var req = new XMLHttpRequest();
       req.open("GET", url, false);
@@ -33,19 +118,117 @@
       document.getElementById(elementId).innerHTML = req.responseText;
     }
 
-    load("header.html", "1");
-    load("main.html", "2");
-    load("footer.html", "3");
+    // Load header, main content, and footer
+    load("header.html", "header");
+    load("main.html", "main");
+    load("footer.html", "footer");
+
+    // Chatbox toggle functionality
+    document.getElementById('chat-icon').addEventListener('click', function () {
+      const chatbox = document.getElementById('chatbox');
+      chatbox.style.display = (chatbox.style.display === 'none' || chatbox.style.display === '') ? 'flex' : 'none';
+    });
+
+    // Default messages for chatbot responses
+    var defaultMessages = [
+      { text: "Hello! ", response: "How can I help you today?" },
+      { text: "Please provide your order number", response: "Sure, please provide your order number so I can assist you." },
+      { text: "Need help with shipping", response: "I can help you with shipping queries. Please provide more details." },
+      { text: "Product information", response: "Sure, which product are you interested in? I'll provide you with the information." }
+    ];
+
+    // Display default messages on page load
+    document.addEventListener("DOMContentLoaded", function () {
+      var chatMessages = document.getElementById("chat-messages");
+
+      defaultMessages.forEach(function (message) {
+        var messageElement = document.createElement("div");
+        messageElement.classList.add("default-message");
+        messageElement.textContent = message.text;
+        messageElement.addEventListener("click", function () {
+          sendUserMessage(message.text); // Simulate user clicking on default message
+        });
+        chatMessages.appendChild(messageElement);
+      });
+
+      // Scroll to the bottom of the chat messages initially
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    // Function to handle sending user message and receiving bot response
+    function sendUserMessage(message) {
+      var chatMessages = document.getElementById("chat-messages");
+
+      // Append user message to chat messages
+      var userMessageElement = document.createElement("div");
+      userMessageElement.classList.add("user-message", "chat-message");
+      userMessageElement.textContent = message;
+      chatMessages.appendChild(userMessageElement);
+
+      // Clear the input field
+      document.getElementById("message-input").value = "";
+
+      // Simulate bot response after 1 second
+      setTimeout(function () {
+        var botResponse = generateResponse(message);
+
+        var botMessageElement = document.createElement("div");
+        botMessageElement.classList.add("bot-message", "chat-message");
+        botMessageElement.innerHTML = "<p>...</p>";
+        chatMessages.appendChild(botMessageElement);
+
+        // Scroll to the bottom of the chat messages
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Simulate bot typing delay
+        setTimeout(function () {
+          botMessageElement.innerHTML = "<p>" + botResponse + "</p>";
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1000);
+      }, 1000);
+
+      // Scroll to the bottom of the chat messages
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Function to generate bot response based on user input
+    function generateResponse(userInput) {
+      // Replace with actual logic to generate responses based on user input
+      // Example:
+      if (userInput.toLowerCase().includes("hey")) {
+        return "Hi there! How can I help you?";
+      } else if (userInput.toLowerCase().includes("order")) {
+        return "Please provide your order number so I can assist you.";
+      } else {
+        return "Please confirm the order details given below: 1. Order Id 2. Email Id 3. Contact Number ";
+      }
+    }
+
+    // Handle Enter key press to send message
+    document.getElementById('message-input').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        sendUserMessage(e.target.value);
+      }
+    });
+
+    // Handle Send button click
+    document.getElementById('send-button').addEventListener('click', function () {
+      sendUserMessage(document.getElementById('message-input').value);
+    });
+
   </script>
 
-  <!-- custom js link -->
+  <!-- Custom JavaScript -->
+  <!-- <script src="Search.js"></script>
+  <script src="s1.js"></script> -->
   <script src="./assets/js/script.js"></script>
   <script src="cart.js"></script>
 
-  <!-- ionicon link -->
+  <!-- Ionicons -->
+
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
+  
 </body>
 
 </html>
