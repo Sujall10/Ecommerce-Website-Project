@@ -1,0 +1,11 @@
+[
+    {
+      "id": 1,
+      "name": "Product A",
+      "price": 49.99,
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "image": "assets/images/news.png",
+      "category": "Category A"
+    }
+]
+  
