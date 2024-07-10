@@ -3,23 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details</title>
-    <style>
-        /* Add your CSS styles here */
-        #badge {
-            background-color: red;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 50%;
-        }
-    </style>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> CONTENT DETAILS | E-COMMERCE WEBSITE BY SUJAL </title>
+    <!-- favicon -->
+    <link rel="icon" href="https://yt3.ggpht.com/a/AGF-l78km1YyNXmF0r3-0CycCA0HLA_i6zYn_8NZEg=s900-c-k-c0xffffffff-no-rj-mo" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="assets/css/style-prefix.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets\css\contentdetails.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <!-- header links -->
+    <script src="https://kit.fontawesome.com/4a3b1f73a2.js"></script>
+    <link href="https://fonts.googleapis.com/css?family/Lato&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div id="containerProduct"></div>
-    <div>
-        <span id="badge"></span> <!-- Cart badge -->
-    </div>
 
-    <script src="script.js"></script> <!-- Assuming your script is in script.js -->
+<body>
+<!-- HEADER -->
+<div id="header"></div>
+<div id="contentDetailsContainer"></div>
+<!-- FOOTER -->
+<div id="footer"></div>
+
+<script>
+    function load(url, elementId) {
+        var req = new XMLHttpRequest();
+        req.open("GET", url, false);
+        req.send(null);
+        document.getElementById(elementId).innerHTML = req.responseText;
+    }
+
+    load("header.html", "header");
+    load("footer.html", "footer");
+</script>
+
+
+
+<script src="contentdetails.js"></script>
+
 </body>
 </html>

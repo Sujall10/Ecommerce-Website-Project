@@ -3,70 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product List</title>
-    <style>
-        .product {
-            margin-bottom: 20px;
-        }
-        .product img {
-            width: 100px;
-            height: 100px;
-        }
-    </style>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> CONTENT | E-COMMERCE WEBSITE BY EDYODA </title>
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <!-- favicon -->
+    <link rel="icon" href="https://yt3.ggpht.com/a/AGF-l78km1YyNXmF0r3-0CycCA0HLA_i6zYn_8NZEg=s900-c-k-c0xffffffff-no-rj-mo" type="image/gif" sizes="16x16">
+
+    <link rel="stylesheet" href="assets\css\style-prefix.css">
+    <link rel="stylesheet" href="assets\css\content.css">
+
 </head>
 <body>
-    <h1>Clothing for Men and Women</h1>
-    <div id="products"></div>
-    <h1>Accessories for Men and Women</h1>
-
+    <div id="9"></div>
     <script>
-        const products = [
-            {
-                "id": 1,
-                "name": "Product A",
-                "price": 49.99,
-                "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "image": "assets/images/news.png",
-                "category": "Category A"
-            },
-            {
-                "id": 2,
-                "name": "Product B",
-                "price": 99.99,
-                "description": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                "image": "assets/images/products/jacket-1.jpg",
-                "category": "Category B"
-            },
-            {
-                "id": 3,
-                "name": "Product C",
-                "price": 29.99,
-                "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                "image": "assets/images/products/jacket-2.jpg",
-                "category": "Category A"
-            },
-            {
-                "id": 4,
-                "name": "Product D",
-                "price": 149.99,
-                "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-                "image": "assets/images/products/jacket-3.jpg",
-                "category": "Category B"
-            }
-        ];
-
-        const productContainer = document.getElementById('products');
-        products.forEach(product => {
-            const productElement = document.createElement('div');
-            productElement.className = 'product';
-            productElement.innerHTML = `
-                <img src="${product.image}" alt="${product.name}">
-                <h2>${product.name}</h2>
-                <p>${product.description}</p>
-                <p>Price: $${product.price}</p>
-            `;
-            productContainer.appendChild(productElement);
-        });
+        load("content.html");
+        function load(url)
+        {
+            req = new XMLHttpRequest();
+            req.open("GET", url, false);
+            req.send(null);
+            document.getElementById(9).innerHTML = req.responseText;
+        }
     </script>
 </body>
+<script src="c.js"></script>
 </html>

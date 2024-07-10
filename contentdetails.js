@@ -1,114 +1,90 @@
-console.clear();
-
-let id = location.search.split('?')[1]; // Extract id from URL query string
-console.log(id);
-
-// Function to dynamically create and display product details
-function dynamicContentDetails(ob) {
-    let mainContainer = document.createElement('div');
-    mainContainer.id = 'containerD';
-    document.getElementById('containerProduct').appendChild(mainContainer);
-
-    let imageSectionDiv = document.createElement('div');
-    imageSectionDiv.id = 'imageSection';
-
-    let imgTag = document.createElement('img');
-    imgTag.id = 'imgDetails';
-    imgTag.src = ob.image;
-
-    imageSectionDiv.appendChild(imgTag);
-
-    let productDetailsDiv = document.createElement('div');
-    productDetailsDiv.id = 'productDetails';
-
-    let h1 = document.createElement('h1');
-    let h1Text = document.createTextNode(ob.name);
-    h1.appendChild(h1Text);
-
-    let h4 = document.createElement('h4');
-    let h4Text = document.createTextNode(ob.category);
-    h4.appendChild(h4Text);
-
-    let detailsDiv = document.createElement('div');
-    detailsDiv.id = 'details';
-
-    let h3DetailsDiv = document.createElement('h3');
-    let h3DetailsText = document.createTextNode('Rs ' + ob.price);
-    h3DetailsDiv.appendChild(h3DetailsText);
-
-    let h3 = document.createElement('h3');
-    let h3Text = document.createTextNode('Description');
-    h3.appendChild(h3Text);
-
-    let para = document.createElement('p');
-    let paraText = document.createTextNode(ob.description);
-    para.appendChild(paraText);
-
-    let productPreviewDiv = document.createElement('div');
-    productPreviewDiv.id = 'productPreview';
-
-    let h3ProductPreviewDiv = document.createElement('h3');
-    let h3ProductPreviewText = document.createTextNode('Product Preview');
-    h3ProductPreviewDiv.appendChild(h3ProductPreviewText);
-    productPreviewDiv.appendChild(h3ProductPreviewDiv);
-
-    ob.photos.forEach((photo, i) => {
-        let imgTagProductPreviewDiv = document.createElement('img');
-        imgTagProductPreviewDiv.id = 'previewImg';
-        imgTagProductPreviewDiv.src = photo;
-        imgTagProductPreviewDiv.onclick = function() {
-            imgTag.src = this.src;
-        };
-        productPreviewDiv.appendChild(imgTagProductPreviewDiv);
+// Function to get query parameters
+// Function to get query parameters
+function getQueryParams() {
+    let params = {};
+    let queryString = window.location.search.substring(1);
+    console.log("Query String:", queryString); // Debugging statement
+    queryString.split("&").forEach(function(part) {
+        let param = part.split("=");
+        params[param[0]] = decodeURIComponent(param[1]);
     });
-
-    let buttonDiv = document.createElement('div');
-    buttonDiv.id = 'button';
-
-    let buttonTag = document.createElement('button');
-    buttonDiv.appendChild(buttonTag);
-
-    let buttonText = document.createTextNode('Add to Cart');
-    buttonTag.onclick = function() {
-        let order = id + " ";
-        let counter = 1;
-        if (document.cookie.indexOf(',counter=') >= 0) {
-            order = id + " " + document.cookie.split(',')[0].split('=')[1];
-            counter = Number(document.cookie.split(',')[1].split('=')[1]) + 1;
-        }
-        document.cookie = "orderId=" + order + ",counter=" + counter;
-        document.getElementById("badge").innerHTML = counter;
-    };
-    buttonTag.appendChild(buttonText);
-
-    mainContainer.appendChild(imageSectionDiv);
-    mainContainer.appendChild(productDetailsDiv);
-    productDetailsDiv.appendChild(h1);
-    productDetailsDiv.appendChild(h4);
-    productDetailsDiv.appendChild(detailsDiv);
-    detailsDiv.appendChild(h3DetailsDiv);
-    detailsDiv.appendChild(h3);
-    detailsDiv.appendChild(para);
-    productDetailsDiv.appendChild(productPreviewDiv);
-    productDetailsDiv.appendChild(buttonDiv);
-
-    return mainContainer;
+    console.log("Parsed Params:", params); // Debugging statement
+    return params;
 }
 
-// Function to make XMLHttpRequest and fetch product details from content.json
-function fetchProductDetails() {
+function createContentDetails(item) {
+    let contentDetailsContainer = document.getElementById("contentDetailsContainer");
+
+    let detailsDiv = document.createElement("div");
+    detailsDiv.id = "details";
+
+    let imageSection = document.createElement("div");
+    imageSection.id = "imageSection";
+
+    let imgTag = document.createElement("img");
+    imgTag.src = item.preview;
+    imageSection.appendChild(imgTag);
+
+    detailsDiv.appendChild(imageSection);
+
+    let textSection = document.createElement("div");
+    textSection.id = "productDetails";
+
+    let h3 = document.createElement("h3");
+    h3.textContent = item.name;
+    textSection.appendChild(h3);
+
+    let h4 = document.createElement("h4");
+    h4.textContent = item.brand;
+    textSection.appendChild(h4);
+
+    let h2 = document.createElement("h2");
+    h2.textContent = "Price: rs " + item.price;
+    textSection.appendChild(h2);
+
+    let description = document.createElement("p");
+    description.textContent = item.description || "No description available.";
+    textSection.appendChild(description);
+
+    detailsDiv.appendChild(textSection);
+
+    contentDetailsContainer.appendChild(detailsDiv);
+}
+
+function fetchContentDetails() {
+    let params = getQueryParams();
+    let itemId = params['id'];
+
+    if (!itemId) {
+        console.error("No item ID found in the URL.");
+        return;
+    }
+
     let httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200) {
-            let contentDetails = JSON.parse(this.responseText);
-            dynamicContentDetails(contentDetails[0]); // Assuming content.json has an array with one object
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                try {
+                    let contentData = JSON.parse(this.responseText);
+                    let item = contentData.find(item => item.id == itemId);
+                    if (item) {
+                        createContentDetails(item);
+                    } else {
+                        console.error("Item not found.");
+                    }
+                } catch (e) {
+                    console.error("Error parsing JSON response: ", e);
+                }
+            } else {
+                console.error("HTTP request failed with status:", this.status);
+            }
         }
     };
-    httpRequest.open('GET', 'content.json', true);
+
+    httpRequest.open("GET", "content.json", true);
     httpRequest.send();
 }
 
-// Call the fetchProductDetails function when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    fetchProductDetails();
-});
+window.onload = function() {
+    fetchContentDetails();
+};
