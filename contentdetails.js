@@ -1,23 +1,27 @@
-// Function to get query parameters
-// Function to get query parameters
+// Function to parse query string parameters
 function getQueryParams() {
-    let params = {};
-    let queryString = window.location.search.substring(1);
-    console.log("Query String:", queryString); // Debugging statement
-    queryString.split("&").forEach(function(part) {
-        let param = part.split("=");
-        params[param[0]] = decodeURIComponent(param[1]);
-    });
-    console.log("Parsed Params:", params); // Debugging statement
-    return params;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    return Object.fromEntries(urlParams.entries());
 }
 
+// Function to create content details based on item data
 function createContentDetails(item) {
     let contentDetailsContainer = document.getElementById("contentDetailsContainer");
 
+    if (!contentDetailsContainer) {
+        console.error("Content details container not found.");
+        return;
+    }
+
+    // Clear previous content
+    contentDetailsContainer.innerHTML = '';
+
+    // Create main details div
     let detailsDiv = document.createElement("div");
     detailsDiv.id = "details";
 
+    // Create image section
     let imageSection = document.createElement("div");
     imageSection.id = "imageSection";
 
@@ -27,6 +31,7 @@ function createContentDetails(item) {
 
     detailsDiv.appendChild(imageSection);
 
+    // Create text section
     let textSection = document.createElement("div");
     textSection.id = "productDetails";
 
@@ -39,18 +44,49 @@ function createContentDetails(item) {
     textSection.appendChild(h4);
 
     let h2 = document.createElement("h2");
-    h2.textContent = "Price: rs " + item.price;
+    h2.textContent = "Price: Rs " + item.price; // Assuming price is in Rs
     textSection.appendChild(h2);
 
     let description = document.createElement("p");
     description.textContent = item.description || "No description available.";
     textSection.appendChild(description);
 
+    // Create Add to Cart button
+    let buttonTag = document.createElement("button");
+    buttonTag.textContent = "Add to Cart";
+    buttonTag.classList.add("add-to-cart-btn"); // Add a class for easier event delegation
+
+    buttonTag.addEventListener("click", function() {
+        let order = item.id;
+        let counter = 1;
+
+        // Check if orderId and counter are already in cookies
+        let cookies = document.cookie.split(';').map(cookie => cookie.trim());
+        cookies.forEach(cookie => {
+            if (cookie.startsWith('orderId=')) {
+                order = cookie.split('=')[1];
+            }
+            if (cookie.startsWith('counter=')) {
+                counter = Number(cookie.split('=')[1]);
+            }
+        });
+
+        // Update orderId and counter in cookies
+        document.cookie = `orderId=${order}; path=/`;
+        document.cookie = `counter=${counter + 1}; path=/`;
+
+        // Redirect to cart.html with itemId as parameter
+        window.location.href = `cart.html?id=${item.id}`;
+    });
+
+    textSection.appendChild(buttonTag);
     detailsDiv.appendChild(textSection);
 
+    // Append details to container
     contentDetailsContainer.appendChild(detailsDiv);
 }
 
+// Function to fetch content details based on item ID
 function fetchContentDetails() {
     let params = getQueryParams();
     let itemId = params['id'];
@@ -70,7 +106,7 @@ function fetchContentDetails() {
                     if (item) {
                         createContentDetails(item);
                     } else {
-                        console.error("Item not found.");
+                        console.error("Item not found for ID:", itemId);
                     }
                 } catch (e) {
                     console.error("Error parsing JSON response: ", e);
@@ -81,10 +117,13 @@ function fetchContentDetails() {
         }
     };
 
+    // Replace 'content.json' with your actual endpoint
     httpRequest.open("GET", "content.json", true);
     httpRequest.send();
 }
 
-window.onload = function() {
+// Load content details when the window is fully loaded
+window.addEventListener('DOMContentLoaded', function() {
     fetchContentDetails();
-};
+});
+

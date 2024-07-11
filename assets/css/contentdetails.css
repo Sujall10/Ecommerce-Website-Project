@@ -114,7 +114,7 @@ button a:focus {
 
 /* Media Queries */
 @media(max-width: 1300px) {
-    h1 {
+    h3 {
         font-size: 28px;
     }
     #productPreview > img {
@@ -132,8 +132,8 @@ button a:focus {
 }
 
 @media(max-width: 1170px) {
-    h1 {
-        font-size: 22px;
+    h3 {
+        font-size: 24px;
     }
     #productPreview > img {
         width: 40px;
@@ -158,6 +158,9 @@ button a:focus {
         display: flex;
         flex-direction: column;
     }
+    h2{
+        font-size: 20px;
+    }
     #imageSection {
         width: 100%;
         text-align: center;
@@ -177,8 +180,34 @@ button a:focus {
 }
 
 @media(max-width: 650px) {
-    #containerD {
+    /* #containerDetailsContainer {
+        display: flex;
         width: 80%;
+    } */
+    #details{
+        margin: 25px;
+    }
+    #imageSection img {
+        height: 200px;
+        width: auto;
+    }
+    h3{
+        margin: 3px;
+        font-size: 18px;
+    }
+    h4{
+        margin: 3px;
+        font-size: 12px;
+    }
+    h2{
+        margin: 3px;
+        font-size: 15px;
+    }
+    p{
+        margin: 0px;
+        font-size: 8px;
+        word-spacing: 1px;
+        
     }
 }
 

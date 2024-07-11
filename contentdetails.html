@@ -3,40 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> CONTENT DETAILS | E-COMMERCE WEBSITE BY SUJAL </title>
-    <!-- favicon -->
+    <title>Content Details | E-COMMERCE WEBSITE BY SUJAL</title>
     <link rel="icon" href="https://yt3.ggpht.com/a/AGF-l78km1YyNXmF0r3-0CycCA0HLA_i6zYn_8NZEg=s900-c-k-c0xffffffff-no-rj-mo" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="assets/css/style-prefix.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets\css\contentdetails.css">
+    <link rel="stylesheet" href="assets/css/contentdetails.css">
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
-    <!-- header links -->
-    <script src="https://kit.fontawesome.com/4a3b1f73a2.js"></script>
-    <link href="https://fonts.googleapis.com/css?family/Lato&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/4a3b1f73a2.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
 <!-- HEADER -->
 <div id="header"></div>
+
+<!-- CONTENT DETAILS -->
 <div id="contentDetailsContainer"></div>
+
 <!-- FOOTER -->
 <div id="footer"></div>
 
+<!-- SCRIPTS -->
 <script>
     function load(url, elementId) {
         var req = new XMLHttpRequest();
-        req.open("GET", url, false);
-        req.send(null);
-        document.getElementById(elementId).innerHTML = req.responseText;
+        req.open("GET", url, true); // Using asynchronous request
+        req.onload = function() {
+            if (req.status === 200) {
+                document.getElementById(elementId).innerHTML = req.responseText;
+            } else {
+                console.error("Error loading " + url + ". Status: " + req.status);
+            }
+        };
+        req.onerror = function() {
+            console.error("Network error occurred while trying to fetch " + url);
+        };
+        req.send();
     }
 
+    // Load header and footer asynchronously
     load("header.html", "header");
     load("footer.html", "footer");
 </script>
 
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-
+<!-- Your Content Details Script -->
 <script src="contentdetails.js"></script>
 
 </body>

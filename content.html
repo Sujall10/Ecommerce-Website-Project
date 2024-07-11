@@ -14,17 +14,21 @@
 
 </head>
 <body>
-    <div id="9"></div>
-    <script>
-        load("content.html");
-        function load(url)
-        {
-            req = new XMLHttpRequest();
-            req.open("GET", url, false);
-            req.send(null);
-            document.getElementById(9).innerHTML = req.responseText;
-        }
-    </script>
+    <div id="mainContainer">
+
+        <h1> clothing for men and women </h1>
+        <div id="containerClothing">
+            <!-- JS rendered code -->
+        </div>
+
+        <h1> accessories for men and women </h1>
+        <div id="containerAccessories">
+            <!-- JS rendered code -->
+        </div>
+    </div>
 </body>
 <script src="c.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
 </html>
